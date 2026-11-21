@@ -2,8 +2,11 @@ name: Update Domains
 
 on:
   schedule:
-    - cron: "0 20 * * *"  # Esegui alle 20:00 ogni giorno
-  workflow_dispatch:      # Permette di avviare manualmente il workflow
+    - cron: "0 20 * * *" # Esegui alle 20:00 ogni giorno
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   update-domains:
@@ -11,7 +14,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -28,10 +31,10 @@ jobs:
 
       - name: Commit and push changes
         run: |
-          git config --global user.email "your-email@example.com"
-          git config --global user.name "Your Name"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+
           git add config.json
-          git commit -m "Aggiornamento domini in config.json"
+          git commit -m "Aggiornamento domini in config.json" || echo "Nessuna modifica da committare"
+
           git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
